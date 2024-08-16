@@ -1,0 +1,27 @@
+name: MySwitchScript
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'README.md'
+      - 'switchScript.sh'
+  schedule:
+    - cron: 0 19 * * 5
+  workflow_dispatch:
+
+env:
+  SCRIPT_SH: switchScript.sh
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: test
+      run: |
+        echo DATE=${{ env.DATE }}
+        echo TAG=${{ env.tag_name }}
+        echo ${{ steps.description.outputs.content }}
