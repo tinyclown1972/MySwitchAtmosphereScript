@@ -35,6 +35,7 @@ mkdir -p ./SwitchSD/switch/Moonlight
 mkdir -p ./SwitchSD/switch/NXThemesInstaller
 mkdir -p ./SwitchSD/switch/SimpleModDownloader
 mkdir -p ./SwitchSD/switch/wiliwili
+mkdir -p ./SwitchSD/switch/AmiiboGenerator
 mkdir -p ./SwitchSD/switch/.overlays
 mkdir -p ./SwitchSD/switch/.packages
 
@@ -404,6 +405,19 @@ else
     rm emuiibo.zip
 fi
 
+### Fetch AmiiboGenerator
+echo 'AmiiboGenerator' >> ../description.txt
+curl -sL https://api.github.com/repos/Slluxx/AmiiboGenerator/releases \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*AmiiboGenerator.nro"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o AmiiboGenerator.nro
+if [ $? -ne 0 ]; then
+    echo "AmiiboGenerator download\033[31m failed\033[0m."
+else
+    echo "AmiiboGenerator download\033[32m success\033[0m."
+    mv AmiiboGenerator.nro ./switch/AmiiboGenerator
+fi
+
 ### Fetch Fizeau
 curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/Fizeau.zip -o Fizeau.zip
 if [ $? -ne 0 ]; then
@@ -447,6 +461,7 @@ ovl-sysmodules
 StatusMonitor
 ReverseNX-RT
 emuiibo
+AmiiboGenerator
 Fizeau
 Zing
 ENDOFFILE
