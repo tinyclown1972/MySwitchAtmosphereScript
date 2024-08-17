@@ -8,11 +8,12 @@ on:
       - 'README.md'
       - 'switchScript.sh'
   schedule:
-    - cron: 0 19 * * 5
+    - cron: 0 11 * * 5
   workflow_dispatch:
 
 env:
   SCRIPT_SH: switchScript.sh
+  BOOT_LOGO: resource/bootlogo.bmp
   TZ: Asia/Shanghai
 
 jobs:
@@ -37,7 +38,8 @@ jobs:
         echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
         chmod +x $SCRIPT_SH
         ./$SCRIPT_SH
-        curl 'https://sctapi.ftqq.com/${{ secrets.server_chain }}.send?title=Switch%20Atmosphere%20Notification&desp=${{ env.tag }}%20Switch%20%E5%A4%A7%E6%B0%94%E5%B1%82%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%9F'
+        mv $BOOT_LOGO SwitchSD/bootloader/bootlogo.bmp
+        curl 'https://sctapi.ftqq.com/${{ secrets.server_chain }}.send?title=Switch%20Atmosphere%20Notification&desp=${{ env.tag_name }}%20Switch%20%E5%A4%A7%E6%B0%94%E5%B1%82%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%9F'
         zip -rq SwitchSD.zip SwitchSD
 
     - name: Read description.txt

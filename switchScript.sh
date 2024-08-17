@@ -271,18 +271,19 @@ else
 fi
 
 ### Fetch lastest Moonlight from https://github.com/XITRIX/Moonlight-Switch/releases/latest
-curl -sL https://api.github.com/repos/XITRIX/Moonlight-Switch/releases/latest \
+curl -sL https://api.github.com/repos/rock88/moonlight-nx/releases/latest \
   | jq '.tag_name' \
-  | xargs -I {} echo Moonlight {} >> ../description.txt
-curl -sL https://api.github.com/repos/XITRIX/Moonlight-Switch/releases/latest \
-  | grep -oP '"browser_download_url": "\Khttps://[^"]*Moonlight-Switch.nro"' \
+  | xargs -I {} echo Moonlight-nx {} >> ../description.txt
+curl -sL https://api.github.com/repos/rock88/moonlight-nx/releases/latest \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*moonlight.zip"' \
   | sed 's/"//g' \
-  | xargs -I {} curl -sL {} -o Moonlight-Switch.nro
+  | xargs -I {} curl -sL {} -o moonlight.zip
 if [ $? -ne 0 ]; then
-    echo "Moonlight download\033[31m failed\033[0m."
+    echo "Moonlight-nx download\033[31m failed\033[0m."
 else
-    echo "Moonlight download\033[32m success\033[0m."
-    mv Moonlight-Switch.nro ./switch/Moonlight
+    echo "Moonlight-nx download\033[32m success\033[0m."
+    unzip -oq moonlight.zip
+    mv moonlight.nro ./switch/Moonlight
 fi
 
 ### Fetch NX-Shell
