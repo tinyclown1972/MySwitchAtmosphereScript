@@ -406,7 +406,9 @@ else
 fi
 
 ### Fetch AmiiboGenerator
-echo 'AmiiboGenerator' >> ../description.txt
+curl -sL https://api.github.com/repos/Slluxx/AmiiboGenerator/releases \
+  | jq '.[0].tag_name' \
+  | xargs -I {} echo AmiiboGenerator {} >> ../description.txt
 curl -sL https://api.github.com/repos/Slluxx/AmiiboGenerator/releases \
   | grep -oP '"browser_download_url": "\Khttps://[^"]*AmiiboGenerator.nro"' \
   | sed 's/"//g' \

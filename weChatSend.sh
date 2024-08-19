@@ -33,7 +33,8 @@ else
                  \"content\": \"$message_content\"
                }, \
                \"safe\": 0 \
-             }"
+             }" \
+         -o /dev/null
     else
     if [ $message_type = "text" ]; then
     curl -s -X POST "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" \
@@ -46,7 +47,8 @@ else
                  \"content\": \"$message_content\"
                }, \
                \"safe\": 0 \
-             }"
+             }" \
+         -o /dev/null
     fi
     fi
     
