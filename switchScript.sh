@@ -238,6 +238,22 @@ else
     mv JKSV.nro ./switch/JKSV
 fi
 
+### Fetch lastest aio-switch-updater from https://kkgithub.com/HamletDuFromage/aio-switch-updater/releases/latest
+curl -sL https://api.github.com/repos/HamletDuFromage/aio-switch-updater/releases/latest \
+  | jq '.tag_name' \
+  | xargs -I {} echo aio-switch-updater {} >> ../description.txt
+curl -sL https://api.github.com/repos/HamletDuFromage/aio-switch-updater/releases/latest \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*aio-switch-updater.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o aio-switch-updater.zip
+if [ $? -ne 0 ]; then
+    echo "aio-switch-updater download\033[31m failed\033[0m."
+else
+    echo "aio-switch-updater download\033[32m success\033[0m."
+    unzip -oq aio-switch-updater.zip
+    rm aio-switch-updater.zip
+fi
+
 ### Fetch lastest wiliwili from https://github.com/xfangfang/wiliwili/releases/latest
 curl -sL https://api.github.com/repos/xfangfang/wiliwili/releases/latest \
   | jq '.tag_name' \
