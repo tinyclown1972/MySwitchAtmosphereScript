@@ -301,6 +301,7 @@ else
     echo "Moonlight-nx download\033[32m success\033[0m."
     unzip -oq moonlight.zip
     mv moonlight.nro ./switch/Moonlight
+    rm moonlight.zip
 fi
 
 ### Fetch NX-Shell
@@ -447,14 +448,14 @@ else
 fi
 
 ### Fetch Zing
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/Zing.zip -o Zing.zip
-if [ $? -ne 0 ]; then
-    echo "Zing download\033[31m failed\033[0m."
-else
-    echo "Zing download\033[32m success\033[0m."
-    unzip -oq Zing.zip
-    rm Zing.zip
-fi
+#curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/Zing.zip -o Zing.zip
+#if [ $? -ne 0 ]; then
+#    echo "Zing download\033[31m failed\033[0m."
+#else
+#    echo "Zing download\033[32m success\033[0m."
+#    unzip -oq Zing.zip
+#    rm Zing.zip
+#fi
 
 ### Fetch lastest sys-tune from https://github.com/HookedBehemoth/sys-tune/releases/latest
 curl -sL https://api.github.com/repos/HookedBehemoth/sys-tune/releases/latest \
@@ -481,7 +482,6 @@ ReverseNX-RT
 emuiibo
 AmiiboGenerator
 Fizeau
-Zing
 ENDOFFILE
 
 ### Fetch sys-patch from https://github.com/impeeza/sys-patch/releases/latest
