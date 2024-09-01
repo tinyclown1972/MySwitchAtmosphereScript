@@ -29,6 +29,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo -E apt install -y jq
+        sudo -E apt install -y diffutils
 
     - name: "Build & Release"
       run: |
@@ -38,7 +39,7 @@ jobs:
         ./$SCRIPT_SH
         mv $BOOT_LOGO SwitchSD/bootloader/bootlogo.bmp
         chmod +x $WECHAT_SH
-        cat ./description.txt | xargs -0 -I {} ./$WECHAT_SH text "$\n{}" ${{ secrets.WECHAT_SEND_CORD_ID }} ${{ secrets.WECHAT_SEND_CORP_SECERT }} ${{ secrets.WECHAT_SEND_CORP_AGENT }} ${{ secrets.WECHAT_SEND_USER }}
+        cat ./description.txt | xargs -0 -I {} ./$WECHAT_SH text "{}" ${{ secrets.WECHAT_SEND_CORD_ID }} ${{ secrets.WECHAT_SEND_CORP_SECERT }} ${{ secrets.WECHAT_SEND_CORP_AGENT }} ${{ secrets.WECHAT_SEND_USER }}
         zip -rq SwitchSD.zip SwitchSD
 
     - name: Read description.txt
@@ -61,7 +62,7 @@ jobs:
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.3.2
       with:
-        keep_latest: 5
+        keep_latest: 10
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.actions_release }}

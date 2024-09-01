@@ -567,6 +567,35 @@ else
 fi
 
 ###################################################################################
+#                         Compare what changed since last build                   #
+###################################################################################
+# get latest description
+curl https://api.github.com/repos/tinyclown1972/MySwitchAtmosphereScript/releases \
+  | jq ".[0].body" \
+  | xargs -I {} echo -e {} > ../pre_desc.txt
+# find latest what changed info and remove them
+START=$(sed -n '/###################/=' ../pre_desc.txt)
+END=$(sed -n '/What Changed Over/=' ../pre_desc.txt)
+# remove pre what changed info
+if [ -n "$START" ] && [ -n "$END" ]; then
+  echo "Start: ${START}, End: ${END}"
+  sed -i "${START},${END}d" ../pre_desc.txt
+else
+  echo "Can not find latest what changed info"
+fi
+# Compare with description this time
+set +e
+diff ../pre_desc.txt ../description.txt -Z -b -w -B > ../what_changed.txt
+set -e
+
+echo " " >> ../description.txt
+echo "###################" >> ../description.txt
+echo "Here is What Changed:" >> ../description.txt
+cat ../what_changed.txt >> ../description.txt
+echo " " >> ../description.txt
+echo "What Changed Over" >> ../description.txt
+
+###################################################################################
 #                         Rename/Write/Clean Action                               #
 ###################################################################################
 ### Rename hekate_ctcaer_*.bin to payload.bin

@@ -63,6 +63,7 @@
   - 运行脚本 (switchScript.sh)
 
 ## 更新日志
+- 2024-09-01 'Add What Changed info'
 - 2024-08-16 'First commit based on my own need'
 
 
