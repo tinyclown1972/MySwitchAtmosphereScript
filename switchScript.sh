@@ -567,6 +567,28 @@ else
 fi
 
 ###################################################################################
+#                         Compare what changed since last build                   #
+###################################################################################
+# get latest description
+curl https://api.github.com/repos/tinyclown1972/MySwitchAtmosphereScript/releases \
+  | jq ".[0].body" \
+  | xargs -I {} echo -e {} > ../pre_desc.txt
+# find latest what changed info and remove them
+START=$(sed -n '/Here is What Changed/=' ../pre_desc.txt)
+END=$(sed -n '/What Changed Over/=' ../pre_desc.txt)
+# remove pre what changed info
+if [ -n "$START" ] && [ -n "$END" ]; then
+  echo "Start: ${START}, End: ${END}"
+else
+  echo "Can not find latest what changed info"
+fi
+# Compare with description this time
+diff ../pre_desc.txt ../description.txt -y --suppress-common-lines --suppress-blank-empty --ignore-blank-lines > ../what_changed.txt
+echo -e "\nHere is What Changed:" >> ../description.txt
+cat ../what_changed.txt >> ../description.txt
+echo -e "\nWhat Changed Over" >> ../description.txt
+
+###################################################################################
 #                         Rename/Write/Clean Action                               #
 ###################################################################################
 ### Rename hekate_ctcaer_*.bin to payload.bin
