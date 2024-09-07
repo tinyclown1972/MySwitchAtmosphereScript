@@ -1,13 +1,18 @@
 #!/bin/sh
 set -e
 
-### Credit to the Authors at https://rentry.org/CFWGuides
-### Script created by Fraxalotl
-### Mod by huangqian8
+# Credit to the Authors at https://rentry.org/CFWGuides
+# Script created by Fraxalotl
+# Edited by leonard
 
-# -------------------------------------------
+###################################################################################
+#                             Some define area                                    #
+###################################################################################
+SIDPATCH_URL="https://sigmapatches.su/"
 
-### Create a few new folders for storing files
+###################################################################################
+#                    Create a few new folders for storing files                   #
+###################################################################################
 if [ -d SwitchSD ]; then
   rm -rf SwitchSD
 fi
@@ -38,15 +43,16 @@ mkdir -p ./SwitchSD/switch/NXThemesInstaller
 mkdir -p ./SwitchSD/switch/SimpleModDownloader
 mkdir -p ./SwitchSD/switch/wiliwili
 mkdir -p ./SwitchSD/switch/AmiiboGenerator
+mkdir -p ./SwitchSD/switch/NXShell
 mkdir -p ./SwitchSD/switch/.overlays
 mkdir -p ./SwitchSD/switch/.packages
 
 cd SwitchSD
 
 ###################################################################################
-#                         Latest module stored in github                          #
+#                         Latest module released in github                        #
 ###################################################################################
-### Fetch latest atmosphere and fusee from https://github.com/Atmosphere-NX/Atmosphere/releases/latest
+# Fetch latest atmosphere and fusee from https://github.com/Atmosphere-NX/Atmosphere/releases/latest
 # Fetch atmosphere first
 curl -sL https://api.github.com/repos/Atmosphere-NX/Atmosphere/releases/latest > resp.tmp
 cat resp.tmp \
@@ -75,7 +81,7 @@ else
   fi
 fi
 
-### Fetch Hekate + Nyx CHS from https://api.github.com/repos/easyworld/hekate/releases/latest
+# Fetch Hekate + Nyx CHS from https://api.github.com/repos/easyworld/hekate/releases/latest
 curl -sL https://api.github.com/repos/easyworld/hekate/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -92,7 +98,7 @@ else
     rm hekate.zip
 fi
 
-### Fetch latest Lockpick_RCM.bin from https://github.com/Decscots/Lockpick_RCM/releases/latest
+# Fetch latest Lockpick_RCM.bin from https://github.com/Decscots/Lockpick_RCM/releases/latest
 curl -sL https://api.github.com/repos/Decscots/Lockpick_RCM/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -108,7 +114,24 @@ else
     mv Lockpick_RCM.bin ./bootloader/payloads
 fi
 
-### Fetch latest CommonProblemResolver.bin form https://github.com/zdm65477730/CommonProblemResolver/releases/latest
+# Fetch lastest SaltyNX from https://github.com/masagrator/SaltyNX/releases
+curl -sL https://api.github.com/repos/masagrator/SaltyNX/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "SaltyNX" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*SaltyNX[^"]*.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o SaltyNX.zip
+if [ $? -ne 0 ]; then
+    echo "SaltyNX download\033[31m failed\033[0m."
+else
+    echo "SaltyNX download\033[32m success\033[0m."
+    unzip -oq SaltyNX.zip
+    rm SaltyNX.zip
+fi
+
+# Fetch latest CommonProblemResolver.bin form https://github.com/zdm65477730/CommonProblemResolver/releases/latest
 curl -sL https://api.github.com/repos/zdm65477730/CommonProblemResolver/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -124,7 +147,7 @@ else
     mv CommonProblemResolver.bin ./bootloader/payloads
 fi
 
-### Fetch lastest Switch_90DNS_tester
+# Fetch lastest Switch_90DNS_tester
 curl -sL https://api.github.com/repos/meganukebmp/Switch_90DNS_tester/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -140,7 +163,7 @@ else
     mv Switch_90DNS_tester.nro ./switch/Switch_90DNS_tester
 fi
 
-### Fetch lastest DBI from https://github.com/rashevskyv/dbi/releases/latest
+# Fetch lastest DBI from https://github.com/rashevskyv/dbi/releases/latest
 curl -sL https://api.github.com/repos/rashevskyv/dbi/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -156,7 +179,7 @@ else
     mv DBI.nro ./switch/DBI
 fi
 
-### Fetch lastest Awoo Installer from https://github.com/dragonflylee/Awoo-Installer/releases/latest
+# Fetch lastest Awoo Installer from https://github.com/dragonflylee/Awoo-Installer/releases/latest
 curl -sL https://api.github.com/repos/dragonflylee/Awoo-Installer/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -173,7 +196,7 @@ else
     rm Awoo-Installer.zip
 fi
 
-### Fetch lastest Hekate-toolbox from https://github.com/WerWolv/Hekate-Toolbox/releases/latest
+# Fetch lastest Hekate-toolbox from https://github.com/WerWolv/Hekate-Toolbox/releases/latest
 curl -sL https://api.github.com/repos/WerWolv/Hekate-Toolbox/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -189,7 +212,7 @@ else
     mv HekateToolbox.nro ./switch/HekateToolbox
 fi
 
-### Fetch lastest NXThemesInstaller from https://github.com/exelix11/SwitchThemeInjector/releases/latest
+# Fetch lastest NXThemesInstaller from https://github.com/exelix11/SwitchThemeInjector/releases/latest
 curl -sL https://api.github.com/repos/exelix11/SwitchThemeInjector/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -205,7 +228,7 @@ else
     mv NXThemesInstaller.nro ./switch/NXThemesInstaller
 fi
 
-### Fetch lastest JKSV from https://github.com/J-D-K/JKSV/releases/latest
+# Fetch lastest JKSV from https://github.com/J-D-K/JKSV/releases/latest
 curl -sL https://api.github.com/repos/J-D-K/JKSV/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -221,7 +244,7 @@ else
     mv JKSV.nro ./switch/JKSV
 fi
 
-### Fetch lastest aio-switch-updater from https://kkgithub.com/HamletDuFromage/aio-switch-updater/releases/latest
+# Fetch lastest aio-switch-updater from https://kkgithub.com/HamletDuFromage/aio-switch-updater/releases/latest
 curl -sL https://api.github.com/repos/HamletDuFromage/aio-switch-updater/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -238,7 +261,7 @@ else
     rm aio-switch-updater.zip
 fi
 
-### Fetch lastest wiliwili from https://github.com/xfangfang/wiliwili/releases/latest
+# Fetch lastest wiliwili from https://github.com/xfangfang/wiliwili/releases/latest
 curl -sL https://api.github.com/repos/xfangfang/wiliwili/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -257,7 +280,7 @@ else
     rm wiliwili-NintendoSwitch.zip
 fi
 
-### Fetch lastest SimpleModDownloader from https://github.com/PoloNX/SimpleModDownloader/releases/latest
+# Fetch lastest SimpleModDownloader from https://github.com/PoloNX/SimpleModDownloader/releases/latest
 curl -sL https://api.github.com/repos/PoloNX/SimpleModDownloader/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -273,7 +296,7 @@ else
     mv SimpleModDownloader.nro ./switch/SimpleModDownloader
 fi
 
-### Fetch lastest Moonlight from https://api.github.com/repos/rock88/moonlight-nx/releases/latest
+# Fetch lastest Moonlight from https://api.github.com/repos/rock88/moonlight-nx/releases/latest
 curl -sL https://api.github.com/repos/rock88/moonlight-nx/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -291,7 +314,7 @@ else
     rm moonlight.zip
 fi
 
-### Fetch lastest hb-appstore from https://github.com/fortheusers/hb-appstore/releases/latest
+# Fetch lastest hb-appstore from https://github.com/fortheusers/hb-appstore/releases/latest
 curl -sL https://api.github.com/repos/fortheusers/hb-appstore/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -307,7 +330,7 @@ else
     mv appstore.nro ./switch/HB-App-Store
 fi
 
-### Fetch lastest theme-patches from https://github.com/exelix11/theme-patches
+# Fetch lastest theme-patches from https://github.com/exelix11/theme-patches
 git clone https://github.com/exelix11/theme-patches
 if [ $? -ne 0 ]; then
     echo "theme-patches download\033[31m failed\033[0m."
@@ -318,7 +341,7 @@ else
     rm -rf theme-patches
 fi
 
-### Fetch lastest Ultrahand-Overlay from https://github.com/ppkantorski/Ultrahand-Overlay/releases/latest
+# Fetch lastest Ultrahand-Overlay from https://github.com/ppkantorski/Ultrahand-Overlay/releases/latest
 curl -sL https://api.github.com/repos/ppkantorski/Ultrahand-Overlay/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -345,7 +368,7 @@ else
   fi
 fi
 
-### Fetch AmiiboGenerator
+# Fetch AmiiboGenerator
 curl -sL https://api.github.com/repos/Slluxx/AmiiboGenerator/releases > resp.tmp
 cat resp.tmp \
   | jq '.[0].tag_name' \
@@ -361,24 +384,7 @@ else
   mv AmiiboGenerator.nro ./switch/AmiiboGenerator
 fi
 
-### Fetch lastest sys-tune from https://github.com/HookedBehemoth/sys-tune/releases/latest
-curl -sL https://api.github.com/repos/HookedBehemoth/sys-tune/releases/latest > resp.tmp
-cat resp.tmp \
-  | jq '.name' \
-  | xargs -I {} echo {} >> ../description.txt
-cat resp.tmp \
-  | grep -oP '"browser_download_url": "\Khttps://[^"]*sys-tune[^"]*.zip"' \
-  | sed 's/"//g' \
-  | xargs -I {} curl -sL {} -o sys-tune.zip
-if [ $? -ne 0 ]; then
-  echo "sys-tune download\033[31m failed\033[0m."
-else
-  echo "sys-tune download\033[32m success\033[0m."
-  unzip -oq sys-tune.zip
-  rm sys-tune.zip
-fi
-
-### Fetch sys-patch from https://github.com/impeeza/sys-patch/releases/latest
+# Fetch sys-patch from https://github.com/impeeza/sys-patch/releases/latest
 curl -sL https://api.github.com/repos/impeeza/sys-patch/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -397,7 +403,7 @@ else
   rm sys-patch.zip
 fi
 
-### Fetch sys-clk from https://github.com/retronx-team/sys-clk/releases/latest
+# Fetch sys-clk from https://github.com/retronx-team/sys-clk/releases/latest
 curl -sL https://api.github.com/repos/retronx-team/sys-clk/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
@@ -415,7 +421,7 @@ else
   rm README.md
 fi
 
-### Fetch lastest OC_Toolkit from https://github.com/halop/OC_Toolkit/releases/latest
+# Fetch lastest OC_Toolkit from https://github.com/halop/OC_Toolkit/releases/latest
 curl -sL https://api.github.com/repos/halop/OC_Toolkit_SC_EOS/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.name' \
@@ -443,43 +449,165 @@ else
   fi
 fi
 
+# Fetch ovl-sysmodules
+curl -sL https://api.github.com/repos/WerWolv/ovl-sysmodules/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "ovl-sysmodules" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*ovlSysmodules.ovl"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o ovlSysmodules.ovl
+if [ $? -ne 0 ]; then
+  echo "ovlSysmodules download\033[31m failed\033[0m."
+else
+  echo "ovlSysmodules download\033[32m success\033[0m."
+  mv ovlSysmodules.ovl switch/.overlays/ovlSysmodules.ovl
+fi
+
+# Fetch nx-ovlloader
+curl -sL https://api.github.com/repos/WerWolv/nx-ovlloader/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "nx-ovlloader" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*nx-ovlloader.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o nx-ovlloader.zip
+if [ $? -ne 0 ]; then
+  echo "nx-ovlloader download\033[31m failed\033[0m."
+else
+  echo "nx-ovlloader download\033[32m success\033[0m."
+  unzip -oq nx-ovlloader.zip
+  rm nx-ovlloader.zip
+fi
+
+# Fetch Fizeau
+curl -sL https://api.github.com/repos/averne/Fizeau/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "Fizeau" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*Fizeau[^"]*.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o Fizeau.zip
+if [ $? -ne 0 ]; then
+  echo "Fizeau download\033[31m failed\033[0m."
+else
+  echo "Fizeau download\033[32m success\033[0m."
+  unzip -oq Fizeau.zip
+  rm Fizeau.zip
+fi
+
+# Fetch emuiibo
+curl -sL https://api.github.com/repos/XorTroll/emuiibo/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "emuiibo" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*emuiibo.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o emuiibo.zip
+if [ $? -ne 0 ]; then
+    echo "emuiibo download\033[31m failed\033[0m."
+else
+    echo "emuiibo download\033[32m success\033[0m."
+    unzip -oq emuiibo.zip
+    cp -r SdOut/* ./
+    rm -rf SdOut
+    rm emuiibo.zip
+fi
+
+# Fetch StatusMonitor
+curl -sL https://api.github.com/repos/masagrator/Status-Monitor-Overlay/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "StatusMonitor" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*Status-Monitor-Overlay.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o StatusMonitor.zip
+if [ $? -ne 0 ]; then
+    echo "StatusMonitor download\033[31m failed\033[0m."
+else
+    echo "StatusMonitor download\033[32m success\033[0m."
+    unzip -oq StatusMonitor.zip
+    rm StatusMonitor.zip
+fi
+
+# Fetch ReverseNX-RT
+curl -sL https://api.github.com/repos/masagrator/ReverseNX-RT/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "ReverseNX-RT" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*ReverseNX-RT-ovl.ovl"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o ReverseNX-RT.ovl
+if [ $? -ne 0 ]; then
+  echo "ReverseNX-RT download\033[31m failed\033[0m."
+else
+  echo "ReverseNX-RT download\033[32m success\033[0m."
+  mv ReverseNX-RT.ovl switch/.overlays/ReverseNX-RT.ovl
+fi
+
+# Fetch NX-Shell
+curl -sL https://api.github.com/repos/joel16/NX-Shell/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "NX-Shell" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*NX-Shell.nro"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o NX-Shell.nro
+if [ $? -ne 0 ]; then
+  echo "NX-Shell download\033[31m failed\033[0m."
+else
+  echo "NX-Shell download\033[32m success\033[0m."
+  mv NX-Shell.nro switch/NXShell/NX-Shell.nro
+fi
+
+# Fetch lastest NX-Activity-Log
+curl -sL https://api.github.com/repos/zdm65477730/NX-Activity-Log/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "NX-Activity-Log" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*NX-Activity-Log.zip"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o NX-Activity-Log.zip
+if [ $? -ne 0 ]; then
+    echo "NX-Activity-Log download\033[31m failed\033[0m."
+else
+    echo "NX-Activity-Log download\033[32m success\033[0m."
+    unzip -oq NX-Activity-Log.zip
+    rm NX-Activity-Log.zip
+fi
+
 ###################################################################################
-#                         module not release in github                            #
+#                         modules not release in github                           #
 ###################################################################################
 ### Fetch Sigpatches from https://hackintendo.com/download/sigpatches
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/sigpatches.zip -o sigpatches.zip
+curl -sL $SIDPATCH_URL -o tmp.html
 if [ $? -ne 0 ]; then
-    echo "sigpatches download\033[31m failed\033[0m."
+  echo "sigpatches url invalid."
 else
-    echo "sigpatches download\033[32m success\033[0m."
-    echo "sigpatches" >> ../description.txt
-    unzip -oq sigpatches.zip
-    rm sigpatches.zip
+  link=$(grep -oP 'href="\K[^"]+' tmp.html | grep -oP 'sigpatches\.zip\?[0-9.]+')
+  description=$(echo $link | sed 's/\?/ /g')
+  link="$SIDPATCH_URL$link"
+  curl -sL $link -o sigpatches.zip
+  if [ $? -ne 0 ]; then
+      echo "sigpatches download\033[31m failed\033[0m."
+  else
+      echo "sigpatches download\033[32m success\033[0m."
+      echo $description >> ../description.txt
+      unzip -oq sigpatches.zip
+      rm sigpatches.zip
+      rm tmp.html
+  fi
 fi
 
-### Fetch ovl-sysmodules
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/ovl-sysmodules.zip -o ovl-sysmodules.zip
-if [ $? -ne 0 ]; then
-    echo "ovl-sysmodules download\033[31m failed\033[0m."
-else
-    echo "ovl-sysmodules download\033[32m success\033[0m."
-    echo "ovl-sysmodules" >> ../description.txt
-    unzip -oq ovl-sysmodules.zip
-    rm ovl-sysmodules.zip
-fi
-
-### Fetch nx-ovlloader
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/nx-ovlloader.zip -o nx-ovlloader.zip
-if [ $? -ne 0 ]; then
-    echo "nx-ovlloader download\033[31m failed\033[0m."
-else
-    echo "nx-ovlloader download\033[32m success\033[0m."
-    echo "nx-ovlloader" >> ../description.txt
-    unzip -oq nx-ovlloader.zip
-    rm nx-ovlloader.zip
-fi
-
-### Fetch logo
+# Fetch logo
 curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/theme/logo.zip -o logo.zip
 if [ $? -ne 0 ]; then
     echo "logo download\033[31m failed\033[0m."
@@ -489,51 +617,7 @@ else
     rm logo.zip
 fi
 
-### Fetch Fizeau
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/Fizeau.zip -o Fizeau.zip
-if [ $? -ne 0 ]; then
-    echo "Fizeau download\033[31m failed\033[0m."
-else
-    echo "Fizeau download\033[32m success\033[0m."
-    echo "Fizeau" >> ../description.txt
-    unzip -oq Fizeau.zip
-    rm Fizeau.zip
-fi
-
-### Fetch emuiibo
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/emuiibo.zip -o emuiibo.zip
-if [ $? -ne 0 ]; then
-    echo "emuiibo download\033[31m failed\033[0m."
-else
-    echo "emuiibo download\033[32m success\033[0m."
-    echo "emuiibo" >> ../description.txt
-    unzip -oq emuiibo.zip
-    rm emuiibo.zip
-fi
-
-### Fetch StatusMonitor
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/StatusMonitor.zip -o StatusMonitor.zip
-if [ $? -ne 0 ]; then
-    echo "StatusMonitor download\033[31m failed\033[0m."
-else
-    echo "StatusMonitor download\033[32m success\033[0m."
-    echo "StatusMonitor" >> ../description.txt
-    unzip -oq StatusMonitor.zip
-    rm StatusMonitor.zip
-fi
-
-### Fetch ReverseNX-RT
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/ReverseNX-RT.zip -o ReverseNX-RT.zip
-if [ $? -ne 0 ]; then
-    echo "ReverseNX-RT download\033[31m failed\033[0m."
-else
-    echo "ReverseNX-RT download\033[32m success\033[0m."
-    echo "ReverseNX-RT" >> ../description.txt
-    unzip -oq ReverseNX-RT.zip
-    rm ReverseNX-RT.zip
-fi
-
-### Fetch daybreak_x
+# Fetch daybreak_x
 curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/daybreak_x.zip -o daybreak_x.zip
 if [ $? -ne 0 ]; then
     echo "daybreak download\033[31m failed\033[0m."
@@ -544,28 +628,6 @@ else
     rm daybreak_x.zip
 fi
 
-### Fetch NX-Shell
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/NX-Shell.zip -o NX-Shell.zip
-if [ $? -ne 0 ]; then
-    echo "NX-Shell download\033[31m failed\033[0m."
-else
-    echo "NX-Shell download\033[32m success\033[0m."
-    echo "NX-Shell" >> ../description.txt
-    unzip -oq NX-Shell.zip
-    rm NX-Shell.zip
-fi
-
-### Fetch lastest NX-Activity-Log
-curl -sL https://raw.githubusercontent.com/huangqian8/SwitchPlugins/main/plugins/NX-Activity-Log.zip -o NX-Activity-Log.zip
-if [ $? -ne 0 ]; then
-    echo "NX-Activity-Log download\033[31m failed\033[0m."
-else
-    echo "NX-Activity-Log download\033[32m success\033[0m."
-    echo "NX-Activity-Log" >> ../description.txt
-    unzip -oq NX-Activity-Log.zip
-    rm NX-Activity-Log.zip
-fi
-
 ###################################################################################
 #                         Compare what changed since last build                   #
 ###################################################################################
@@ -574,7 +636,7 @@ curl https://api.github.com/repos/tinyclown1972/MySwitchAtmosphereScript/release
   | jq ".[0].body" \
   | xargs -I {} echo -e {} > ../pre_desc.txt
 # find latest what changed info and remove them
-START=$(sed -n '/###################/=' ../pre_desc.txt)
+START=$(sed -n '/Here is What Changed:/=' ../pre_desc.txt)
 END=$(sed -n '/What Changed Over/=' ../pre_desc.txt)
 # remove pre what changed info
 if [ -n "$START" ] && [ -n "$END" ]; then
@@ -589,16 +651,16 @@ diff ../pre_desc.txt ../description.txt -Z -b -w -B > ../what_changed.txt
 set -e
 
 echo " " >> ../description.txt
-echo "###################" >> ../description.txt
 echo "Here is What Changed:" >> ../description.txt
+echo "~~~" >> ../description.txt
 cat ../what_changed.txt >> ../description.txt
-echo " " >> ../description.txt
+echo "~~~" >> ../description.txt
 echo "What Changed Over" >> ../description.txt
 
 ###################################################################################
 #                         Rename/Write/Clean Action                               #
 ###################################################################################
-### Rename hekate_ctcaer_*.bin to payload.bin
+# Rename hekate_ctcaer_*.bin to payload.bin
 find . -name "*hekate_ctcaer*" -exec mv {} payload.bin \;
 if [ $? -ne 0 ]; then
     echo "Rename hekate_ctcaer_*.bin to payload.bin\033[31m failed\033[0m."
@@ -606,14 +668,14 @@ else
     echo "Rename hekate_ctcaer_*.bin to payload.bin\033[32m success\033[0m."
 fi
 
-### Write hekate_ipl.ini in /bootloader/
+# Write hekate_ipl.ini in /bootloader/
 cat > ./bootloader/hekate_ipl.ini << ENDOFFILE
 [config]
-autoboot=0
+autoboot=2
 autoboot_list=0
-bootwait=3
+bootwait=1
 backlight=100
-noticker=0
+noticker=1
 autohosoff=1
 autonogc=1
 updater2p=0
@@ -653,7 +715,7 @@ else
     echo "Writing hekate_ipl.ini in ./bootloader/ directory\033[32m success\033[0m."
 fi
 
-### write exosphere.ini in root of SD Card
+# write exosphere.ini in root of SD Card
 cat > ./exosphere.ini << ENDOFFILE
 [exosphere]
 debugmode=1
@@ -675,7 +737,7 @@ else
     echo "Writing exosphere.ini in root of SD card\033[32m success\033[0m."
 fi
 
-### Write emummc.txt & sysmmc.txt in /atmosphere/hosts
+# Write emummc.txt & sysmmc.txt in /atmosphere/hosts
 cat > ./atmosphere/hosts/emummc.txt << ENDOFFILE
 # 屏蔽任天堂服务器
 127.0.0.1 *nintendo.*
@@ -700,7 +762,7 @@ else
     echo "Writing emummc.txt and sysmmc.txt in ./atmosphere/hosts\033[32m success\033[0m."
 fi
 
-### Write boot.ini in root of SD Card
+# Write boot.ini in root of SD Card
 cat > ./boot.ini << ENDOFFILE
 [payload]
 file=payload.bin
@@ -711,7 +773,7 @@ else
     echo "Writing boot.ini in root of SD card\033[32m success\033[0m."
 fi
 
-### Write override_config.ini in /atmosphere/config
+# Write override_config.ini in /atmosphere/config
 cat > ./atmosphere/config/override_config.ini << ENDOFFILE
 [hbl_config]
 program_id_0=010000000000100D
@@ -725,7 +787,7 @@ else
     echo "Writing override_config.ini in ./atmosphere/config\033[32m success\033[0m."
 fi
 
-### Write system_settings.ini in /atmosphere/config
+# Write system_settings.ini in /atmosphere/config
 cat > ./atmosphere/config/system_settings.ini << ENDOFFILE
 [eupld]
 ; 禁用将错误报告上传到任天堂
@@ -774,7 +836,7 @@ else
     echo "Writing system_settings.ini in ./atmosphere/config\033[32m success\033[0m."
 fi
 
-### Delete unneeded files
+# Delete unneeded files
 rm -f switch/haze.nro
 rm -f switch/reboot_to_payload.nro
 rm -f switch/daybreak.nro

@@ -40,7 +40,6 @@
     - [x] 虚拟Amiibo `emuiibo` [From Here](https://www.tekqart.com/thread-222735-1-1.html)
     - [x] Amiibo下载器 `AmiiboGenerator` [From Here](https://github.com/Slluxx/AmiiboGenerator)
     - [x] 色彩调整 `Fizeau` [From Here](https://www.tekqart.com/thread-222735-1-1.html)
-    - [x] 后台音乐 `sys-tune` [From Here](https://www.tekqart.com/thread-370954-1-1.html)
     - [x] 系统补丁 `sys-patch` [From Here](https://github.com/impeeza/sys-patch/releases/latest)
     - [x] 超频插件 `sys-clk` [From Here](https://github.com/retronx-team/sys-clk/releases/latest)
     - [x] 调频插件 `OC Toolkit` [From Here](https://github.com/halop/OC_Toolkit/releases/latest)
@@ -63,6 +62,7 @@
   - 运行脚本 (switchScript.sh)
 
 ## 更新日志
+- 2024-09-07 'Update module upstream to github release except some missing, remove sys-tune'
 - 2024-09-01 'Add What Changed info'
 - 2024-08-16 'First commit based on my own need'
 
