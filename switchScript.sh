@@ -584,6 +584,22 @@ else
     rm NX-Activity-Log.zip
 fi
 
+# Fetch FPSLocker
+curl -sL https://api.github.com/repos/masagrator/FPSLocker/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "FPSLocker" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*FPSLocker.ovl"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o FPSLocker.ovl
+if [ $? -ne 0 ]; then
+  echo "FPSLocker download\033[31m failed\033[0m."
+else
+  echo "FPSLocker download\033[32m success\033[0m."
+  mv FPSLocker.ovl switch/.overlays/FPSLocker.ovl
+fi
+
 ###################################################################################
 #                         modules not release in github                           #
 ###################################################################################
