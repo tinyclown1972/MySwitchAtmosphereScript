@@ -98,8 +98,8 @@ else
     rm hekate.zip
 fi
 
-# Fetch latest Lockpick_RCM.bin from https://github.com/Decscots/Lockpick_RCM/releases/latest
-curl -sL https://api.github.com/repos/Decscots/Lockpick_RCM/releases/latest > resp.tmp
+# Fetch latest Lockpick_RCM.bin from https://github.com/Kofysh/Lockpick_RCM/releases
+curl -sL https://api.github.com/repos/Kofysh/Lockpick_RCM/releases/latest > resp.tmp
 cat resp.tmp \
   | jq '.tag_name' \
   | xargs -I {} echo Lockpick_RCM {} >> ../description.txt
