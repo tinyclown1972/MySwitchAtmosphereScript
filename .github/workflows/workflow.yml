@@ -37,7 +37,6 @@ jobs:
         echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
         chmod +x $SCRIPT_SH
         ./$SCRIPT_SH
-        mv $BOOT_LOGO SwitchSD/bootloader/bootlogo.bmp
         chmod +x $WECHAT_SH
         cat ./description.txt | xargs -0 -I {} ./$WECHAT_SH text "{}" ${{ secrets.WECHAT_SEND_CORD_ID }} ${{ secrets.WECHAT_SEND_CORP_SECERT }} ${{ secrets.WECHAT_SEND_CORP_AGENT }} ${{ secrets.WECHAT_SEND_USER }}
         zip -rq SwitchSD.zip SwitchSD
