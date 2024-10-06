@@ -163,21 +163,21 @@ else
     mv Switch_90DNS_tester.nro ./switch/Switch_90DNS_tester
 fi
 
-# Fetch lastest DBI from https://github.com/rashevskyv/dbi/releases/latest
-curl -sL https://api.github.com/repos/rashevskyv/dbi/releases/latest > resp.tmp
-cat resp.tmp \
-  | jq '.name' \
-  | xargs -I {} echo {} >> ../description.txt
-cat resp.tmp \
-  | grep -oP '"browser_download_url": "\Khttps://[^"]*DBI.nro"' \
-  | sed 's/"//g' \
-  | xargs -I {} curl -sL {} -o DBI.nro
-if [ $? -ne 0 ]; then
-    echo "DBI download\033[31m failed\033[0m."
-else
-    echo "DBI download\033[32m success\033[0m."
-    mv DBI.nro ./switch/DBI
-fi
+# # Fetch lastest DBI from https://github.com/rashevskyv/dbi/releases/latest
+# curl -sL https://api.github.com/repos/rashevskyv/dbi/releases/latest > resp.tmp
+# cat resp.tmp \
+#   | jq '.name' \
+#   | xargs -I {} echo {} >> ../description.txt
+# cat resp.tmp \
+#   | grep -oP '"browser_download_url": "\Khttps://[^"]*DBI.nro"' \
+#   | sed 's/"//g' \
+#   | xargs -I {} curl -sL {} -o DBI.nro
+# if [ $? -ne 0 ]; then
+#     echo "DBI download\033[31m failed\033[0m."
+# else
+#     echo "DBI download\033[32m success\033[0m."
+#     mv DBI.nro ./switch/DBI
+# fi
 
 # Fetch lastest Awoo Installer from https://github.com/dragonflylee/Awoo-Installer/releases/latest
 curl -sL https://api.github.com/repos/dragonflylee/Awoo-Installer/releases/latest > resp.tmp
@@ -600,6 +600,38 @@ else
   mv FPSLocker.ovl switch/.overlays/FPSLocker.ovl
 fi
 
+# Fetch EdiZon
+curl -sL https://api.github.com/repos/WerWolv/EdiZon/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "Edizon" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*EdiZon.nro"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o Edizon.nro
+if [ $? -ne 0 ]; then
+  echo "Edizon download\033[31m failed\033[0m."
+else
+  echo "Edizon download\033[32m success\033[0m."
+  mv Edizon.nro switch/Edizon.nro
+fi
+
+# Fetch EdiZon overlay
+curl -sL https://api.github.com/repos/proferabg/EdiZon-Overlay/releases/latest > resp.tmp
+cat resp.tmp \
+  | jq '.tag_name' \
+  | xargs -I {} echo "Edizon overlay" {} >> ../description.txt
+cat resp.tmp \
+  | grep -oP '"browser_download_url": "\Khttps://[^"]*ovlEdiZon.ovl"' \
+  | sed 's/"//g' \
+  | xargs -I {} curl -sL {} -o ovlEdiZon.ovl
+if [ $? -ne 0 ]; then
+  echo "ovlEdiZon.ovl download\033[31m failed\033[0m."
+else
+  echo "ovlEdiZon.ovl download\033[32m success\033[0m."
+  mv ovlEdiZon.ovl switch/.overlays/ovlEdiZon.ovl
+fi
+
 ###################################################################################
 #                         modules not release in github                           #
 ###################################################################################
@@ -631,6 +663,25 @@ else
     echo "logo download\033[32m success\033[0m."
     unzip -oq logo.zip
     rm logo.zip
+fi
+
+# Fetch bootlogo
+curl -sL https://raw.githubusercontent.com/tinyclown1972/MySwitchAtmosphereScript/refs/heads/master/resource/bootlogo.bmp -o bootlogo.bmp
+if [ $? -ne 0 ]; then
+    echo "bootlogo download\033[31m failed\033[0m."
+else
+    echo "bootlogo download\033[32m success\033[0m."
+    mv bootlogo.bmp ./bootloader/bootlogo.bmp
+fi
+
+# Fetch DBI English Ver
+curl -sL https://raw.githubusercontent.com/tinyclown1972/MySwitchAtmosphereScript/refs/heads/master/resource/DBI.nro -o DBI.nro
+if [ $? -ne 0 ]; then
+    echo "DBI download\033[31m failed\033[0m."
+else
+    echo "DBI download\033[32m success\033[0m."
+    echo "DBI 658" >> ../description.txt
+    mv DBI.nro ./switch/DBI/DBI.nro
 fi
 
 # Fetch daybreak_x
