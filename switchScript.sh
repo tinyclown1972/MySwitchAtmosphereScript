@@ -8,7 +8,7 @@ set -e
 ###################################################################################
 #                             Some define area                                    #
 ###################################################################################
-SIDPATCH_URL="https://sigmapatches.su/"
+SIDPATCH_URL="https://hackintendo.com/download/sigpatches/"
 
 ###################################################################################
 #                    Create a few new folders for storing files                   #
@@ -637,10 +637,7 @@ curl -sL $SIDPATCH_URL -o tmp.html
 if [ $? -ne 0 ]; then
   echo "sigpatches url invalid."
 else
-  link=$(grep -oP 'href="\K[^"]+' tmp.html | grep -oP 'sigpatches\.zip\?[0-9.]+')
-  description=$(echo $link | sed 's/\?/ /g')
-  link="$SIDPATCH_URL$link"
-  curl -sL $link -o sigpatches.zip
+  grep -oP 'data-downloadurl="\K[^"]+' tmp.html | xargs -I {} curl -sL {} -o sigpatches.zip
   if [ $? -ne 0 ]; then
       echo "sigpatches download\033[31m failed\033[0m."
   else
